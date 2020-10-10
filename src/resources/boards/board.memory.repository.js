@@ -38,7 +38,7 @@ const updateBoard = async (boardId, boardBody) => {
 
 const deleteBoard = async id => {
   db.boards = db.boards.filter(b => b.id !== id);
-
+  db.tasks = db.tasks.filter(t => t.boardId !== id);
   return null;
 };
 
