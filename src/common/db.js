@@ -6,6 +6,13 @@ const DB = {
       login: 'test_user',
       password: 'T35t_P@55w0rd'
     }
+  ],
+  boards: [
+    {
+      id: '12345',
+      title: 'new-board',
+      columns: []
+    }
   ]
 };
 
