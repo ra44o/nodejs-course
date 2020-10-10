@@ -1,30 +1,7 @@
 const DB = {
-  users: [
-    {
-      id: 'e8f85c26-c573-4bd1-a0f0-8e14024426dc',
-      name: 'Super Admin',
-      login: 'test_user',
-      password: 'T35t_P@55w0rd'
-    }
-  ],
-  boards: [
-    {
-      id: '12345',
-      title: 'new-board',
-      columns: []
-    }
-  ],
-  tasks: [
-    {
-      id: '1',
-      title: 'task 1',
-      order: 0,
-      description: 'description',
-      userId: null,
-      boardId: '12345',
-      columnId: null
-    }
-  ]
+  users: [],
+  boards: [],
+  tasks: []
 };
 
 module.exports = DB;
