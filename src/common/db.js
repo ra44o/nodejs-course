@@ -13,6 +13,17 @@ const DB = {
       title: 'new-board',
       columns: []
     }
+  ],
+  tasks: [
+    {
+      id: '1',
+      title: 'task 1',
+      order: 0,
+      description: 'description',
+      userId: null,
+      boardId: '12345',
+      columnId: null
+    }
   ]
 };
 
