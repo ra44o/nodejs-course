@@ -10,15 +10,6 @@ class Task {
     boardId = null,
     columnId = null
   } = {}) {
-    console.log({
-      id,
-      title,
-      order,
-      description,
-      userId,
-      boardId,
-      columnId
-    });
     this.id = id;
     this.title = title;
     this.order = order;

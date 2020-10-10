@@ -16,7 +16,6 @@ router.route('/').post(async (req, res) => {
 });
 
 router.route('/:taskId').get(async (req, res) => {
-  console.log(req.params.boardId, req.params.taskId);
   const task = await tasksService.getByBoardIdAndTaskId(
     req.params.boardId,
     req.params.taskId
