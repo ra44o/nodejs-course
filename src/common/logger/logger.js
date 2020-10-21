@@ -1,25 +1,30 @@
 const fs = require('fs');
 const path = require('path');
 const { HttpError, InternalServerError } = require('http-errors');
+const { exit } = process;
 
 const { colors } = require('../constants');
 
 const writeToLogsFile = async (dataToWrite, pathToFile) => {
-  fs.appendFile(
-    pathToFile
-      ? path.resolve(pathToFile)
-      : path.resolve(__dirname, './logs.txt'),
-    `${JSON.stringify(dataToWrite)}\n`,
-    {
-      encoding: 'utf8',
-      flag: 'a+'
-    },
-    err => {
-      if (err) {
-        throw new Error(err);
+  return new Promise((resolve, reject) => {
+    fs.appendFile(
+      pathToFile
+        ? path.resolve(pathToFile)
+        : path.resolve(__dirname, './logs.txt'),
+      `${JSON.stringify(dataToWrite)}\n`,
+      {
+        encoding: 'utf8',
+        flag: 'a+'
+      },
+      err => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
       }
-    }
-  );
+    );
+  });
 };
 
 const logger = async (req, res, next) => {
@@ -94,7 +99,7 @@ const promiseRejectHandler = err => {
 };
 
 const uncoughtExceptionHandler = err => {
-  errorLogger(err);
+  errorLogger(err).then(() => exit(1));
 };
 
 module.exports = {

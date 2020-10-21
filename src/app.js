@@ -5,9 +5,17 @@ const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardsRouter = require('./resources/boards/board.router');
 const { logger, errorHandler } = require('./common/logger/logger');
+const {
+  promiseRejectHandler,
+  uncoughtExceptionHandler
+} = require('./common/logger/logger');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
+
+process
+  .on('unhandledRejection', promiseRejectHandler)
+  .on('uncaughtException', uncoughtExceptionHandler);
 
 app.use(express.json());
 
@@ -25,5 +33,8 @@ app.use(logger);
 app.use('/users', userRouter);
 app.use('/boards', boardsRouter);
 app.use(errorHandler);
+
+// throw Error('throw Error!');
+// Promise.reject(Error('Promise.reject!'));
 
 module.exports = app;
