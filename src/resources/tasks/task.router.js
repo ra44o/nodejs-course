@@ -32,7 +32,7 @@ const getTaskById = async (req, res, next) => {
     if (task) {
       res.status(200).send(toResponse(task));
     } else {
-      res.send(404).send(task);
+      res.status(404).send(task);
     }
   } catch (error) {
     return next(error);
