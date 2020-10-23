@@ -1,11 +1,11 @@
 const router = require('express').Router();
-const User = require('./user.model');
+const { toResponse } = require('./user.model');
 const usersService = require('./user.service');
 
 const getAllHandler = async (req, res, next) => {
   try {
     const users = await usersService.getAll();
-    res.status(200).send(users.map(User.toResponse));
+    res.status(200).send(users.map(toResponse));
   } catch (error) {
     return next(error);
   }
@@ -14,7 +14,7 @@ const getAllHandler = async (req, res, next) => {
 const getByIdHandler = async (req, res, next) => {
   try {
     const user = await usersService.getById(req.params.id);
-    res.status(200).send(User.toResponse(user));
+    res.status(200).send(toResponse(user));
   } catch (error) {
     return next(error);
   }
@@ -23,7 +23,7 @@ const getByIdHandler = async (req, res, next) => {
 const createHandler = async (req, res, next) => {
   try {
     const user = await usersService.createUser(req.body);
-    res.status(200).send(User.toResponse(user));
+    res.status(200).send(toResponse(user));
   } catch (error) {
     return next(error);
   }
@@ -32,7 +32,7 @@ const createHandler = async (req, res, next) => {
 const updateHandler = async (req, res, next) => {
   try {
     const user = await usersService.updateUser(req.params.id, req.body);
-    res.status(200).send(User.toResponse(user));
+    res.status(200).send(toResponse(user));
   } catch (error) {
     return next(error);
   }

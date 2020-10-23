@@ -7,7 +7,7 @@ const boardsRouter = require('./resources/boards/board.router');
 const { logger, errorHandler } = require('./common/logger/logger');
 const {
   promiseRejectHandler,
-  uncoughtExceptionHandler
+  uncaughtExceptionHandler
 } = require('./common/logger/logger');
 
 const app = express();
@@ -15,7 +15,7 @@ const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 process
   .on('unhandledRejection', promiseRejectHandler)
-  .on('uncaughtException', uncoughtExceptionHandler);
+  .on('uncaughtException', uncaughtExceptionHandler);
 
 app.use(express.json());
 
