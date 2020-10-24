@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const { toResponse } = require('./user.model');
 const usersService = require('./user.service');
+const validator = require('../../utils/validation/validator');
+const { userSchema, idSchema } = require('../../utils/validation/schemas');
 
 const getAllHandler = async (req, res, next) => {
   try {
@@ -48,9 +50,15 @@ const deleteHandler = async (req, res, next) => {
 };
 
 router.route('/').get(getAllHandler);
-router.route('/:id').get(getByIdHandler);
-router.route('/').post(createHandler);
-router.route('/:id').put(updateHandler);
-router.route('/:id').delete(deleteHandler);
+router.route('/:id').get(validator(idSchema, 'params'), getByIdHandler);
+router.route('/').post(validator(userSchema, 'body'), createHandler);
+router
+  .route('/:id')
+  .put(
+    validator(idSchema, 'params'),
+    validator(userSchema, 'body'),
+    updateHandler
+  );
+router.route('/:id').delete(validator(idSchema, 'params'), deleteHandler);
 
 module.exports = router;

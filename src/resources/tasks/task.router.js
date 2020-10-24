@@ -1,6 +1,8 @@
 const router = require('express').Router({ mergeParams: true });
 const tasksService = require('./task.service');
 const { toResponse } = require('./task.model');
+const validator = require('../../utils/validation/validator');
+const { idSchema, taskSchema } = require('../../utils/validation/schemas');
 
 const getAllTasks = async (req, res, next) => {
   try {
@@ -65,9 +67,15 @@ const deleteTask = async (req, res, next) => {
 };
 
 router.route('/').get(getAllTasks);
-router.route('/').post(createTask);
-router.route('/:taskId').get(getTaskById);
-router.route('/:taskId').put(updateTask);
-router.route('/:taskId').delete(deleteTask);
+router.route('/').post(validator(taskSchema, 'body'), createTask);
+router.route('/:taskId').get(validator(idSchema, 'params'), getTaskById);
+router
+  .route('/:taskId')
+  .put(
+    validator(idSchema, 'params'),
+    validator(taskSchema, 'body'),
+    updateTask
+  );
+router.route('/:taskId').delete(validator(idSchema, 'params'), deleteTask);
 
 module.exports = router;

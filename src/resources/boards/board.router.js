@@ -2,6 +2,8 @@ const router = require('express').Router();
 const boardsService = require('./board.service');
 const tasksRouter = require('../tasks/task.router');
 const { toResponse } = require('./board.model');
+const validator = require('../../utils/validation/validator');
+const { idSchema, boardSchema } = require('../../utils/validation/schemas');
 
 router.use('/:boardId/tasks', tasksRouter);
 
@@ -55,9 +57,15 @@ const deleteBoard = async (req, res, next) => {
 };
 
 router.route('/').get(getAllBoards);
-router.route('/:boardId').get(getBoardById);
-router.route('/').post(createBoard);
-router.route('/:boardId').put(updateBoard);
-router.route('/:boardId').delete(deleteBoard);
+router.route('/:boardId').get(validator(idSchema, 'params'), getBoardById);
+router.route('/').post(validator(boardSchema, 'body'), createBoard);
+router
+  .route('/:boardId')
+  .put(
+    validator(idSchema, 'params'),
+    validator(boardSchema, 'body'),
+    updateBoard
+  );
+router.route('/:boardId').delete(validator(idSchema, 'params'), deleteBoard);
 
 module.exports = router;

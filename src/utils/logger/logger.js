@@ -3,7 +3,7 @@ const path = require('path');
 const { HttpError, InternalServerError } = require('http-errors');
 const { exit } = process;
 
-const { colors } = require('../constants');
+const { colors } = require('../../common/constants');
 
 const writeToLogsFile = async (dataToWrite, pathToFile) => {
   return new Promise((resolve, reject) => {

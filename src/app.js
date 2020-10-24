@@ -4,11 +4,11 @@ const path = require('path');
 const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardsRouter = require('./resources/boards/board.router');
-const { logger, errorHandler } = require('./common/logger/logger');
+const { logger, errorHandler } = require('./utils/logger/logger');
 const {
   promiseRejectHandler,
   uncaughtExceptionHandler
-} = require('./common/logger/logger');
+} = require('./utils/logger/logger');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
