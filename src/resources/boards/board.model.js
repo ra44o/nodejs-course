@@ -1,5 +1,21 @@
 const mongoose = require('mongoose');
 
+const columnSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      default: 'new-column'
+    },
+    order: {
+      type: Number,
+      default: 0
+    }
+  },
+  {
+    versionKey: false
+  }
+);
+
 const boardSchema = new mongoose.Schema(
   {
     title: {
@@ -8,7 +24,7 @@ const boardSchema = new mongoose.Schema(
       default: 'new-board'
     },
     columns: {
-      type: Array,
+      type: [columnSchema],
       default: [],
       required: false
     }
