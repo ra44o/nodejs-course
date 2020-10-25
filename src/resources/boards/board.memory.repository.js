@@ -1,44 +1,37 @@
-const db = require('../../common/db');
+const { Board } = require('./board.model');
+const { Task } = require('../tasks/task.model');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const getAll = async () => {
-  return db.boards;
+  return Board.find({});
 };
 
 const getById = async id => {
-  return db.boards.filter(board => board.id === id)[0];
+  return Board.findOne({ _id: id });
 };
 
 const createBoard = async board => {
-  db.boards.push(board);
-  return board;
+  const newBoard = new Board({
+    ...board
+  });
+  await newBoard.save();
+  return newBoard;
 };
 
 const updateBoard = async (boardId, boardBody) => {
-  db.boards = db.boards.map(b => {
-    if (b.id === boardId) {
-      const output = {};
-
-      if (boardBody.title) {
-        output.title = boardBody.title;
-      }
-      if (boardBody.columns && boardBody.columns.length) {
-        output.columns = boardBody.columns;
-      }
-
-      return {
-        ...b,
-        ...output
-      };
+  await Board.updateOne(
+    { _id: boardId },
+    {
+      $set: { ...boardBody }
     }
-    return b;
-  });
+  );
 
-  return db.boards.find(b => b.id === boardId);
+  return Board.findOne({ _id: boardId });
 };
 
 const deleteBoard = async id => {
-  db.boards = db.boards.filter(b => b.id !== id);
-  db.tasks = db.tasks.filter(t => t.boardId !== id);
+  await Task.deleteMany({ boardId: ObjectId(id) });
+  await Board.deleteOne({ _id: id });
   return null;
 };
 

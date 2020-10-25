@@ -1,11 +1,13 @@
 const router = require('express').Router({ mergeParams: true });
 const tasksService = require('./task.service');
-const Task = require('./task.model');
+const { toResponse } = require('./task.model');
+const validator = require('../../utils/validation/validator');
+const { idSchema, taskSchema } = require('../../utils/validation/schemas');
 
 const getAllTasks = async (req, res, next) => {
   try {
     const tasks = await tasksService.getByBoardId(req.params.boardId);
-    res.status(200).send(tasks.map(Task.toResponse));
+    res.status(200).send(tasks.map(toResponse));
   } catch (error) {
     return next(error);
   }
@@ -17,7 +19,7 @@ const createTask = async (req, res, next) => {
       ...req.body,
       boardId: req.params.boardId
     });
-    res.status(200).send(Task.toResponse(task));
+    res.status(200).send(toResponse(task));
   } catch (error) {
     return next(error);
   }
@@ -30,9 +32,9 @@ const getTaskById = async (req, res, next) => {
       req.params.taskId
     );
     if (task) {
-      res.status(200).send(Task.toResponse(task));
+      res.status(200).send(toResponse(task));
     } else {
-      res.send(404).send(task);
+      res.status(404).send(task);
     }
   } catch (error) {
     return next(error);
@@ -46,7 +48,7 @@ const updateTask = async (req, res, next) => {
       req.params.taskId,
       req.body
     );
-    res.status(200).send(Task.toResponse(task));
+    res.status(200).send(toResponse(task));
   } catch (error) {
     return next(error);
   }
@@ -65,9 +67,15 @@ const deleteTask = async (req, res, next) => {
 };
 
 router.route('/').get(getAllTasks);
-router.route('/').post(createTask);
-router.route('/:taskId').get(getTaskById);
-router.route('/:taskId').put(updateTask);
-router.route('/:taskId').delete(deleteTask);
+router.route('/').post(validator(taskSchema, 'body'), createTask);
+router.route('/:taskId').get(validator(idSchema, 'params'), getTaskById);
+router
+  .route('/:taskId')
+  .put(
+    validator(idSchema, 'params'),
+    validator(taskSchema, 'body'),
+    updateTask
+  );
+router.route('/:taskId').delete(validator(idSchema, 'params'), deleteTask);
 
 module.exports = router;

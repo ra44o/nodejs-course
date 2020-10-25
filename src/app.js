@@ -4,18 +4,18 @@ const path = require('path');
 const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardsRouter = require('./resources/boards/board.router');
-const { logger, errorHandler } = require('./common/logger/logger');
+const { logger, errorHandler } = require('./utils/logger/logger');
 const {
   promiseRejectHandler,
-  uncoughtExceptionHandler
-} = require('./common/logger/logger');
+  uncaughtExceptionHandler
+} = require('./utils/logger/logger');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 process
   .on('unhandledRejection', promiseRejectHandler)
-  .on('uncaughtException', uncoughtExceptionHandler);
+  .on('uncaughtException', uncaughtExceptionHandler);
 
 app.use(express.json());
 

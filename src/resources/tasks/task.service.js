@@ -1,4 +1,3 @@
-const Task = require('./task.model');
 const tasksRepo = require('./task.memory.repository');
 
 const getByBoardId = id => tasksRepo.getByBoardId(id);
@@ -6,7 +5,7 @@ const getByBoardId = id => tasksRepo.getByBoardId(id);
 const getByBoardIdAndTaskId = (boardId, taskId) =>
   tasksRepo.getByBoardIdAndTaskId(boardId, taskId);
 
-const createTask = task => tasksRepo.createTask(new Task(task));
+const createTask = task => tasksRepo.createTask(task);
 
 const updateTask = (boardId, taskId, task) =>
   tasksRepo.updateTask(boardId, taskId, task);

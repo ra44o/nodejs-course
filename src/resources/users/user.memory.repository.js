@@ -1,44 +1,43 @@
-const db = require('../../common/db');
+const { User } = require('./user.model');
+const { Task } = require('../tasks/task.model');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const getAll = async () => {
-  return db.users;
+  return User.find({});
 };
 
 const getById = async id => {
-  return db.users.find(user => user.id === id);
+  return User.findOne({ _id: id });
 };
 
 const createUser = async user => {
-  db.users.push(user);
+  const newUser = new User({
+    ...user
+  });
+  await newUser.save();
 
-  return user;
+  return newUser;
 };
 
 const updateUser = async (userId, userBody) => {
-  db.users = db.users.map(user => {
-    if (user.id === userId) {
-      return {
-        ...user,
-        ...userBody
-      };
+  await User.updateOne(
+    { _id: userId },
+    {
+      $set: { ...userBody }
     }
-    return user;
-  });
+  );
 
-  return db.users.find(user => user.id === userId);
+  return User.findOne({ _id: userId });
 };
 
 const deleteUser = async userId => {
-  db.users = db.users.filter(user => user.id !== userId);
-  db.tasks = db.tasks.map(t => {
-    if (t.userId === userId) {
-      return {
-        ...t,
-        userId: null
-      };
+  await Task.updateMany(
+    { userId: ObjectId(userId) },
+    {
+      $set: { userId: null }
     }
-    return t;
-  });
+  );
+  await User.deleteOne({ _id: userId });
 
   return null;
 };

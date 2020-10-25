@@ -3,14 +3,14 @@ const path = require('path');
 const { HttpError, InternalServerError } = require('http-errors');
 const { exit } = process;
 
-const { colors } = require('../constants');
+const { colors } = require('../../common/constants');
 
 const writeToLogsFile = async (dataToWrite, pathToFile) => {
   return new Promise((resolve, reject) => {
     fs.appendFile(
       pathToFile
         ? path.resolve(pathToFile)
-        : path.resolve(__dirname, './logs.txt'),
+        : path.resolve(__dirname, './logs.log'),
       `${JSON.stringify(dataToWrite)}\n`,
       {
         encoding: 'utf8',
@@ -73,7 +73,7 @@ const errorLogger = async (err, req) => {
     }
     console.error(`${colors.error}ERROR: ${message}${colors.normal}`);
 
-    await writeToLogsFile(data);
+    await writeToLogsFile(data, path.resolve(__dirname, './error.log'));
     return;
   } catch (error) {
     if (error) {
@@ -98,7 +98,7 @@ const promiseRejectHandler = err => {
   errorLogger(err);
 };
 
-const uncoughtExceptionHandler = err => {
+const uncaughtExceptionHandler = err => {
   errorLogger(err).then(() => exit(1));
 };
 
@@ -106,5 +106,5 @@ module.exports = {
   logger,
   errorHandler,
   promiseRejectHandler,
-  uncoughtExceptionHandler
+  uncaughtExceptionHandler
 };
