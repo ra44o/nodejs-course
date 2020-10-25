@@ -1,11 +1,12 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 
 const idSchema = Joi.object()
   .options({ abortEarly: false, allowUnknown: true })
   .keys({
-    id: Joi.string(),
-    boardId: Joi.string(),
-    taskId: Joi.string()
+    id: Joi.objectId(),
+    boardId: Joi.objectId(),
+    taskId: Joi.objectId()
   });
 
 const userSchema = Joi.object()
