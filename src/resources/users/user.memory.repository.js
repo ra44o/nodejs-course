@@ -1,6 +1,7 @@
 const { User } = require('./user.model');
 const { Task } = require('../tasks/task.model');
 const ObjectId = require('mongoose').Types.ObjectId;
+const bcrypt = require('bcrypt');
 
 const getAll = async () => {
   return User.find({});
@@ -12,7 +13,8 @@ const getById = async id => {
 
 const createUser = async user => {
   const newUser = new User({
-    ...user
+    ...user,
+    password: await bcrypt.hash(user.password, 8)
   });
   await newUser.save();
 

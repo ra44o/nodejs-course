@@ -4,11 +4,13 @@ const path = require('path');
 const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardsRouter = require('./resources/boards/board.router');
+const loginRouter = require('./resources/login/login.router');
 const { logger, errorHandler } = require('./utils/logger/logger');
 const {
   promiseRejectHandler,
   uncaughtExceptionHandler
 } = require('./utils/logger/logger');
+const { authorize } = require('./utils/authentication/auth');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -30,8 +32,9 @@ app.use('/', (req, res, next) => {
 });
 
 app.use(logger);
-app.use('/users', userRouter);
-app.use('/boards', boardsRouter);
+app.use('/users', authorize, userRouter);
+app.use('/boards', authorize, boardsRouter);
+app.use('/login', loginRouter);
 app.use(errorHandler);
 
 // throw Error('throw Error!');
